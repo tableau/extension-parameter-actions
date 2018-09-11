@@ -79,9 +79,7 @@ a:hover {
 }
 
 .gh {
+    font-size: 16px;
     text-align: center;
-    font-size: 14px;
     width: 100%;
-    display: flex;
-    justify-content: space-around;
 }
