@@ -110,7 +110,7 @@ class ParameterActions extends React.Component<any, State> {
     
     // Pops open the configure page
     public configure() {
-        const popupUrl = (window.location.origin.includes('localhost')) ? `${window.location.origin}/#/config` : `${window.location.origin}/Parameter-Actions/#/config`;
+        const popupUrl = (window.location.origin.includes('localhost')) ? `${window.location.origin}/#/config` : `${window.location.origin}/extension-parameter-actions/#/config`;
         const payload = '';
         window.tableau.extensions.ui.displayDialogAsync(popupUrl, payload, { height: 420, width: 420 }).then(() => {
             const settings = window.tableau.extensions.settings.getAll();
