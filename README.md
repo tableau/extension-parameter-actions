@@ -3,7 +3,7 @@ A Tableau extension that allows you to update parameter values from worksheet se
 
 ## Installing the Extension
 
-Download the Data-Driven Parameter [manifest file](https://tableau.github.io/extension-parameter-actions/ParameterActions.trex). 
+Download the Parameter Actions [manifest file](https://tableau.github.io/extension-parameter-actions/ParameterActions.trex). 
 
 ## Using the Extension
 1. Select a pre-existing parameter for the extension to manipulate.
