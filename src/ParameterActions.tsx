@@ -99,9 +99,8 @@ class ParameterActions extends React.Component<any, State> {
             } else {
                 output = data[0];
             }
-            // if (settings.keepOnDeselect === 'true' && !output) {
-            if (settings.keepOnDeselect === 'false') {
-                output = '';
+            if (settings.keepOnDeselect === 'true' && !output) {
+                return;
             }
             dashboard.findParameterAsync(settings.parameter).then((param: any) => {
                 param.changeValueAsync(output);
