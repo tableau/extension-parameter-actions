@@ -274,3 +274,19 @@ select.parameter:hover {
 .click {
     cursor: pointer;
 }
+
+.delimiter-text-field > input {
+    font-family: 'Benton Sans';
+    padding-right: 0;
+    text-align: center;
+}
+
+.delimiter-text-field > .errorMessage {
+    display: none;
+}
+
+.dropdown-select {
+    flex: 1;
+    margin-left: 0;
+    width: '100%';
+}
