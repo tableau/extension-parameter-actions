@@ -72,12 +72,7 @@ class Configure extends React.Component<any, State> {
     };
 
     // Handles change in multiselect checkbox
-    public delimiterChange = (delimiter: string): void => {
-        this.setState({ delimiter });
-    };
-
-    // Handles change in multiselect checkbox
-    public delimiterChangeTwo = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    public delimiterChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({ delimiter: e.target.value });
     };
 
@@ -459,7 +454,7 @@ class Configure extends React.Component<any, State> {
                         <Checkbox checked={this.state.multiselect} onChange={this.multiChange} children='Allow multiple selections' style={{ marginLeft: '11px', marginTop: '12px', display: 'flex', alignItems: 'center'}} />
                         <div style={{ display: (this.state.multiselect) ? 'flex' : 'none', alignItems: 'center', flex: 1, textAlign: 'right', marginLeft: '30px' }}>
                             <span children='Use this character as a separator:' style={{marginRight:'5px'}} />
-                            <TextField kind='line' onChange={this.delimiterChangeTwo} className='delimiter-text-field' value={this.state.delimiter} disabled={!this.state.multiselect} maxLength={1} style={{ marginBottom: 6, width: 20 }} />
+                            <TextField kind='line' onChange={this.delimiterChange} className='delimiter-text-field' value={this.state.delimiter} disabled={!this.state.multiselect} maxLength={1} style={{ marginBottom: 6, width: 20 }} />
                         </div>
                     </div>
                     <div className='footer'>
