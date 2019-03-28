@@ -91,7 +91,7 @@ class ParameterActions extends React.Component<any, State> {
                 data.push(d[index].value);
             }
             data = Array.from(new Set(data));
-            if (settings.multiselect === 'true') {
+            if (settings.multiselect === 'true' && dataType === 'string') {
                 output = data.join(settings.delimiter)
             } else {
                 output = data[0];
@@ -100,7 +100,22 @@ class ParameterActions extends React.Component<any, State> {
                 return;
             }
             if (settings.keepOnDeselect === 'false' && marks.data[0].data.length === 0) {
-                output = '';
+                switch (dataType) {
+                    case 'float':
+                    case 'int':
+                        output = '0'
+                        break;
+                    case 'string':
+                        output = '';
+                        break;
+                    case 'date':
+                    case 'date-time':
+                        const date = new Date;
+                        output = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+                        break;
+                    default:
+                        output = '0';
+                }
             }
             dashboard.findParameterAsync(settings.parameter).then((param: any) => {
                 param.changeValueAsync(output);
@@ -139,6 +154,7 @@ class ParameterActions extends React.Component<any, State> {
             this.setState({
                 mode: window.tableau.extensions.environment.mode,
             });
+            console.log(window.tableau.extensions.environment.mode);
             const settings = window.tableau.extensions.settings.getAll();
             if (settings.configured !== 'true') {
                 this.configure();
@@ -155,7 +171,7 @@ class ParameterActions extends React.Component<any, State> {
         if (this.state.configured && this.state.valid) {
             status = 'Extension is configured and valid. This cog will disappear in viewing mode.';
             cogColor = 'rgba(0, 0, 0, 0.8)';
-        } else if(this.state.configured) {
+        } else if (this.state.configured) {
             status = 'Extension is configured but not valid.';
             cogColor = '#C93A47';
         } else {

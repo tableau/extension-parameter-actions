@@ -13,6 +13,7 @@ let dashboard: any;
 
 interface State {
     configured: boolean,
+    dataType: string,
     delimiter: string,
     field: string,
     field_config: boolean,
@@ -36,6 +37,7 @@ const NoOpenInputParameters: string = 'No open input parameters!';
 class Configure extends React.Component<any, State> {
     public readonly state: State = {
         configured: false,
+        dataType: 'string',
         delimiter: '|',
         field: '',
         field_config: false,
@@ -168,6 +170,7 @@ class Configure extends React.Component<any, State> {
             let dataType: string;
             dashboard.findParameterAsync(this.state.parameter).then((param: any) => {
                 dataType = param.dataType;
+                this.setState({dataType});
             })
                 .then(() => {
                     let field = false;
@@ -207,6 +210,7 @@ class Configure extends React.Component<any, State> {
         let dataType: string;
         dashboard.findParameterAsync(this.state.parameter).then((param: any) => {
             dataType = param.dataType;
+            this.setState({dataType});
         })
             .then(() => {
                 const fetchPromises: any[] = [];
@@ -329,6 +333,7 @@ class Configure extends React.Component<any, State> {
     // Clear which tableau parameter to update
     public clearParam = (): void => {
         this.setState({
+            dataType: 'string',
             field: '',
             field_enabled: false,
             param_config: false,
@@ -344,7 +349,7 @@ class Configure extends React.Component<any, State> {
         window.tableau.extensions.settings.set('worksheets', JSON.stringify(this.state.worksheets));
         window.tableau.extensions.settings.set('field', this.state.field);
         window.tableau.extensions.settings.set('keepOnDeselect', JSON.stringify(this.state.keepOnDeselect));
-        window.tableau.extensions.settings.set('multiselect', JSON.stringify(this.state.multiselect));
+        window.tableau.extensions.settings.set('multiselect', JSON.stringify(this.state.multiselect && this.state.dataType === 'string'));
         window.tableau.extensions.settings.set('configured', 'true');
         window.tableau.extensions.settings.saveAsync().then(() => {
             window.tableau.extensions.ui.closeDialog('true');
@@ -355,6 +360,7 @@ class Configure extends React.Component<any, State> {
     public clearSettings = (): void => {
         this.setState({
             configured: false,
+            dataType: 'string',
             field: '',
             field_config: false,
             field_enabled: false,
@@ -431,10 +437,10 @@ class Configure extends React.Component<any, State> {
                             </div>
                         </div>
                         <Checkbox checked={this.state.keepOnDeselect} onChange={this.deselectChange} children='Persist selections on deselect' style={{ marginLeft: '11px', marginTop: '12px', display: 'flex', alignItems: 'center' }} />
-                        <Checkbox checked={this.state.multiselect} onChange={this.multiChange} children='Allow multiple selections' style={{ marginLeft: '11px', marginTop: '12px', display: 'flex', alignItems: 'center' }} />
-                        <div style={{ display: (this.state.multiselect) ? 'flex' : 'none', alignItems: 'center', flex: 1, textAlign: 'right', marginLeft: '30px' }}>
+                        <Checkbox checked={this.state.multiselect && this.state.dataType === 'string'} onChange={this.multiChange} children='Allow multiple selections (string parameters only)' style={{ marginLeft: '11px', marginTop: '12px', display: 'flex', alignItems: 'center' }} disabled={this.state.dataType !== 'string'}/>
+                        <div style={{ display: (this.state.multiselect  && this.state.dataType === 'string') ? 'flex' : 'none', alignItems: 'center', flex: 1, textAlign: 'right', marginLeft: '30px' }}>
                             <span children='Use this character as a separator:' style={{ marginRight: '5px' }} />
-                            <TextField kind='line' onChange={this.delimiterChange} className='delimiter-text-field' value={this.state.delimiter} disabled={!this.state.multiselect} maxLength={1} style={{ marginBottom: 6, width: 20 }} />
+                            <TextField kind='line' onChange={this.delimiterChange} className='delimiter-text-field' value={this.state.delimiter} disabled={!this.state.multiselect  && this.state.dataType === 'string'} maxLength={1} style={{ marginBottom: 6, width: 20 }} />
                         </div>
                     </div>
                     <div className='footer'>

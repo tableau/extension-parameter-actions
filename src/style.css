@@ -239,7 +239,7 @@ select.parameter:hover {
 }
 
 .viewing {
-    display: none;
+    display: none !important;
 }
 
 .cog {
