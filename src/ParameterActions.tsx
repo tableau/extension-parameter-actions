@@ -8,7 +8,6 @@ declare global {
 }
 
 let dashboard: any;
-let validws: any;
 let dataType: string;
 
 interface State {
@@ -25,7 +24,7 @@ class ParameterActions extends React.Component<any, State> {
     };
 
     public validate(settings: any) {
-        validws = [];
+        const validws: any[] = [];
         const pset = settings.parameter;
         if (pset) {
             dashboard.findParameterAsync(settings.parameter).then((param: any) => {
@@ -36,7 +35,7 @@ class ParameterActions extends React.Component<any, State> {
                     const wsnames: any[] = [];
                     if (wsset) {
                         dashboard.worksheets.filter((ws: any) => {
-                            if (wsset.find((l: any) => l.worksheet === ws.name)) {
+                            if (wsset.find((l: any) => l.worksheet === ws.name && l.included)) {
                                 return ws
                             }
                         }).forEach((worksheet: any) => {
@@ -57,7 +56,7 @@ class ParameterActions extends React.Component<any, State> {
                             }
                             if (validws.length > 0) {
                                 this.setState({ valid: true });
-                                this.listen();
+                                this.listen(validws);
                             }
                         });
                     }
@@ -66,7 +65,7 @@ class ParameterActions extends React.Component<any, State> {
         }
     }
 
-    public listen() {
+    public listen(validws: any) {
         for (const ws of dashboard.worksheets) {
             ws.removeEventListener(window.tableau.TableauEventType.MarkSelectionChanged, this.updateParam);
         }
