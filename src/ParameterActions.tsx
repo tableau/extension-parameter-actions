@@ -66,60 +66,71 @@ class ParameterActions extends React.Component<any, State> {
     }
 
     public listen(validws: any) {
-        for (const ws of dashboard.worksheets) {
-            ws.removeEventListener(window.tableau.TableauEventType.MarkSelectionChanged, this.updateParam);
+        for (const worksheet of dashboard.worksheets) {
+            worksheet.removeEventListener(window.tableau.TableauEventType.MarkSelectionChanged, this.getMarks);
         }
 
-        for (const ws of validws) {
-            dashboard.worksheets.find((w: any) => w.name === ws).addEventListener(window.tableau.TableauEventType.MarkSelectionChanged, this.updateParam);
+        for (const wsname of validws) {
+            const worksheet = dashboard.worksheets.find((w: any) => w.name === wsname);
+            // Load any current selections into parameter, this ensure selections still work if selection causes reload.
+            worksheet.getSelectedMarksAsync().then((marks: any) => {
+                this.updateParam(marks)
+            });
+            
+            worksheet.addEventListener(window.tableau.TableauEventType.MarkSelectionChanged, this.getMarks);
         }
     }
 
-    public updateParam(selection: any) {
-        const settings = window.tableau.extensions.settings.getAll();
+    // public getMarks(selection: any) {
+    public getMarks = (selection: any): void => {
         selection.getMarksAsync().then((marks: any) => {
-            let index: number = 0;
-            let data: any[] = [];
-            let output: string = '';
-            for (const c of marks.data[0].columns) {
-                if (c.fieldName === settings.field) {
-                    index = c.index;
-                }
-            }
-            for (const d of marks.data[0].data) {
-                data.push(d[index].value);
-            }
-            data = Array.from(new Set(data));
-            if (settings.multiselect === 'true' && dataType === 'string') {
-                output = data.join(settings.delimiter)
-            } else {
-                output = data[0];
-            }
-            if (settings.keepOnDeselect === 'true' && !output) {
-                return;
-            }
-            if (settings.keepOnDeselect === 'false' && marks.data[0].data.length === 0) {
-                switch (dataType) {
-                    case 'float':
-                    case 'int':
-                        output = '0'
-                        break;
-                    case 'string':
-                        output = '';
-                        break;
-                    case 'date':
-                    case 'date-time':
-                        const date = new Date;
-                        output = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-                        break;
-                    default:
-                        output = '0';
-                }
-            }
-            dashboard.findParameterAsync(settings.parameter).then((param: any) => {
-                param.changeValueAsync(output);
-            });
+            this.updateParam(marks)
         })
+    }
+    
+    public updateParam(marks: any) {
+        const settings = window.tableau.extensions.settings.getAll();
+        let index: number = 0;
+        let data: any[] = [];
+        let output: string = '';
+        for (const c of marks.data[0].columns) {
+            if (c.fieldName === settings.field) {
+                index = c.index;
+            }
+        }
+        for (const d of marks.data[0].data) {
+            data.push(d[index].value);
+        }
+        data = Array.from(new Set(data));
+        if (settings.multiselect === 'true' && dataType === 'string') {
+            output = data.join(settings.delimiter)
+        } else {
+            output = data[0];
+        }
+        if (settings.keepOnDeselect === 'true' && !output) {
+            return;
+        }
+        if (settings.keepOnDeselect === 'false' && marks.data[0].data.length === 0) {
+            switch (dataType) {
+                case 'float':
+                case 'int':
+                    output = '0'
+                    break;
+                case 'string':
+                    output = '';
+                    break;
+                case 'date':
+                case 'date-time':
+                    const date = new Date;
+                    output = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+                    break;
+                default:
+                    output = '0';
+            }
+        }
+        dashboard.findParameterAsync(settings.parameter).then((param: any) => {
+            param.changeValueAsync(output);
+        });
     }
 
     // Pops open the configure page
