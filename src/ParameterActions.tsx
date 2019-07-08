@@ -36,7 +36,9 @@ class ParameterActions extends React.Component<any, State> {
                     if (wsset) {
                         dashboard.worksheets.filter((ws: any) => {
                             if (wsset.find((l: any) => l.worksheet === ws.name && l.included)) {
-                                return ws
+                                return true;
+                            } else {
+                                return false;
                             }
                         }).forEach((worksheet: any) => {
                             if (worksheet) {
@@ -121,7 +123,7 @@ class ParameterActions extends React.Component<any, State> {
                     break;
                 case 'date':
                 case 'date-time':
-                    const date = new Date;
+                    const date = new Date();
                     output = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
                     break;
                 default:
