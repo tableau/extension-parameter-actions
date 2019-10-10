@@ -1,0 +1,8 @@
+{
+    "port": 8080,
+    "extensions": {
+        "parameter-actions": {
+            "path": "./build"
+        }
+    }
+}
