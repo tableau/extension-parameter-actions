@@ -24,7 +24,7 @@ class Home extends React.Component<any, any> {
 								<li><i>Optional: </i> Choose if you want to allow multi-select mode and if so, your delimiter.</li>
 							</ol>
 							<div className='gh'>
-							Get this extension and more in the <a href='https://extensiongallery.tableau.com/'>Extension Gallery</a>.
+								Get this extension and more in the <a href='https://exchange.tableau.com/'>Tableau Exchange</a>.
 								{/* <a href='https://github.com/tableau/extension-parameter-actions'>View on GitHub</a> */}
 							</div>
 						</div>
